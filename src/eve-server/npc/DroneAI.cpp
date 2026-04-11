@@ -142,7 +142,7 @@ int8 DroneAIMgr::GetState() {
 void DroneAIMgr::Return() {
     m_assignedShip = m_pDrone->GetHomeShip();
     m_pDrone->DestinyMgr()->SetMaxVelocity(m_chaseSpeed);
-    m_pDrone->DestinyMgr()->Follow(m_assignedShip, m_entityOrbitRange);
+    m_pDrone->DestinyMgr()->Follow(m_assignedShip, 0);  // fly directly to ship; Departing handler checks < m_entityOrbitRange
     m_state = DroneAI::State::Departing;
 }
 
