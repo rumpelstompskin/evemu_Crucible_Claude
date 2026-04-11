@@ -69,6 +69,13 @@ Things to verify after recent changes (0.8.7). Check off each item as you confir
 
 ---
 
+## NPC Combat
+
+- [ ] **NPC repair visual** — Attack an NPC rat until its health drops. If it has repair modules (common on cruisers/battlecruisers), it should show a shield glow or armor repair beam animation on the NPC model.
+- [ ] **NPC health bar updates on repair** — With an NPC targeted, its health bar should visibly rise when it activates a repair module, not stay frozen at a low value.
+
+---
+
 ## Stability
 
 - [ ] **No crash on combat** — Engage NPCs with modules active and drones out. Killing NPCs or having modules deactivate mid-combat should not crash the server.
