@@ -1478,6 +1478,13 @@ void DestinyManager::InitWarp() {
     if (m_turning) {
         ClearTurn();
     }
+    // Reset movement state so warp always starts clean, regardless of prior
+    // decel/accel state (e.g. post-warp decel when rapidly re-warping).
+    m_accel = false;
+    m_decel = false;
+    m_prevSpeed = 0.0f;
+    m_prevSpeedFraction = 0.0f;
+    m_maxSpeed = m_maxShipSpeed;
 
     if (is_log_enabled(DESTINY__WARP_TRACE)) {
         _log(
@@ -1799,13 +1806,10 @@ void DestinyManager::WarpStop(double currentShipSpeed) {
         mySE->GetNPCSE()->GetAIMgr()->WarpOutComplete();
     }
 
-    // TODO: when exiting warp, and attempting to warp again shortly after, the
-    // ball mode reaches a weird state where it goes from Warp to a regular
-    // move. Halting the ship after warp completes seems to fix this, but it's
-    // not a good fix, because the client shows that the ship moves a few meters
-    // forward while decelerating - meaning that the client and server are
-    // briefly out of sync because the server thinks the ship is halted.
-    Halt();
+    // Post-warp deceleration is handled by SetSpeedFraction(0.0f) above,
+    // which set m_ballMode=GOTO and configured decel variables to match the
+    // client's own decel animation. Rapid re-warp is handled by the movement
+    // state reset in InitWarp().
 }
 
 //called whenever an entity is going away and can no longer be used as a target
@@ -2298,6 +2302,24 @@ void DestinyManager::Orbit(SystemEntity *pSE, uint32 distance/*0*/) {
     if (m_followDistance == 0) {
         _log(DESTINY__ERROR, "%s(%u) - FollowDistance is 0.", mySE->GetName(), mySE->GetID());
         m_followDistance = (uint32)(m_targetDistance + Tr + m_radius); // fudge something here.  will have to fix later, but this is close enough
+    }
+
+    // Pre-check initial orbit distance so the first Orbit() tick hits the correct
+    // branch immediately, avoiding one tick of wrong-state computation and heading jerk.
+    {
+        GPoint Tp(pSE->GetPosition());
+        double centers = m_position.distance(Tp);
+        double edges = centers - m_radius - pSE->GetRadius();
+        if ((edges / 2) > m_followDistance) {
+            m_orbiting = Destiny::Ball::Orbit::TooFar;
+        } else if ((centers + m_targetDistance / 3) < m_followDistance) {
+            m_orbiting = Destiny::Ball::Orbit::TooClose;
+        } else {
+            m_orbiting = Destiny::Ball::Orbit::Orbiting;
+        }
+        if (is_log_enabled(DESTINY__ORBIT_TRACE))
+            _log(DESTINY__ORBIT_TRACE, "%s(%u) - Orbit initial state: %u (centers:%.2f, edges:%.2f, follow:%u)", \
+                mySE->GetName(), mySE->GetID(), m_orbiting, centers, edges, m_followDistance);
     }
 
     CmdOrbit du;
