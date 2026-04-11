@@ -364,6 +364,17 @@ void DestinyManager::SetSpeedFraction(float fraction/*1.0*/, bool startMovement/
     if (m_ballMode == Destiny::Ball::Mode::WARP) {
         // set state to Ball::Mode::GOTO after setting warp decel variables, so warp completion will decel properly
         m_ballMode = Destiny::Ball::Mode::GOTO;
+        // Tell client warp has ended and ship is decelerating in current heading direction.
+        // Without this, the client continues its warp animation while the server runs GOTO decel,
+        // causing a visible 180-degree flip on warp exit.
+        std::vector<PyTuple*> updates;
+        CmdGotoDirection du;
+            du.entityID = mySE->GetID();
+            du.x = m_shipHeading.x;
+            du.y = m_shipHeading.y;
+            du.z = m_shipHeading.z;
+        updates.push_back(du.Encode());
+        SendDestinyUpdate(updates);
         return;
     }
 
@@ -1796,7 +1807,6 @@ void DestinyManager::WarpStop(double currentShipSpeed) {
         _log(AUTOPILOT__MESSAGE, "Destiny::WarpStop(): %s(%u) - Warp complete.", mySE->GetName(), mySE->GetID());
         mySE->GetPilot()->SetLoginWarpComplete();
     }
-    m_targetPoint += (m_warpState->warp_vector *10000);
     // SetSpeedFraction() checks for m_state = Warp and warpstate != null to set decel variables correctly with warp decel.
     //   have to call this BEFORE deleting or reseting m_state or WarpState.
     SetSpeedFraction(0.0f);
