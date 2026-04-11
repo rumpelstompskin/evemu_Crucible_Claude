@@ -637,7 +637,7 @@ void Client::WarpOut() {
     m_ship->SetCustomInfo(ci);
     if (!InPod())
         m_ship->SetFlag(flagShipOffline);
-    pShipSE->SetPosition(m_ship->position());
+    m_ship->SetPosition(pShipSE->DestinyMgr()->GetPosition());
     DestroyShipSE();
     return;
     /*

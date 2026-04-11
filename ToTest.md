@@ -62,6 +62,13 @@ Things to verify after recent changes (0.8.7). Check off each item as you confir
 
 ---
 
+## Docking / Logout
+
+- [ ] **Dock at station** — Warp to a station and request dock. Ship should approach and complete the dock — not oscillate or wiggle in place.
+- [ ] **Position saved on logout** — Warp to a location in space, log out, log back in. Ship should appear at or near where you logged out, not the previous system/location.
+
+---
+
 ## Stability
 
 - [ ] **No crash on combat** — Engage NPCs with modules active and drones out. Killing NPCs or having modules deactivate mid-combat should not crash the server.

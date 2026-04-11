@@ -1094,7 +1094,8 @@ void DestinyManager::Follow() {
     //  Follow is also used by client as AlignTo.
     const GPoint& target_point = m_targetEntity.second->GetPosition();
     GVector heading(m_position, target_point);
-    m_targetDistance = (uint32)(heading.length() - m_radius);
+    double rawDist = heading.length() - m_radius;
+    m_targetDistance = (rawDist > 0.0) ? (uint32)rawDist : 0;
 
     if (m_targetDistance < m_followDistance) {
         if (mySE->HasPilot())
