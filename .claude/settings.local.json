@@ -1,0 +1,25 @@
+{
+  "permissions": {
+    "allow": [
+      "Read(//c/Users/lordr/.claude/projects/C--Users-lordr-source-repos-evemu-Crucible-Claude/memory//**)",
+      "Read(//c/Users/lordr/.claude/projects/C--Users-lordr-source-repos-evemu-Crucible-Claude/memory/**)",
+      "Bash(xargs grep:*)",
+      "Bash(gunzip -c mktOrders.sql.gz)",
+      "Bash(git add:*)",
+      "Bash(git commit -m ':*)",
+      "Bash(git push:*)",
+      "Bash(gunzip:*)",
+      "Bash(grep:*)",
+      "Bash(find:*)",
+      "Bash(ls -la /c/Users/lordr/source/repos/evemu_Crucible_Claude/src/eve-server/system/*.h)",
+      "Bash(git remote:*)",
+      "Bash(zcat mapRegions.sql.gz)",
+      "Bash(xargs -I{} basename {} .sql.gz)",
+      "Bash(zcat mktOrders.sql.gz)",
+      "WebFetch(domain:raw.githubusercontent.com)",
+      "WebFetch(domain:github.com)",
+      "WebFetch(domain:api.github.com)",
+      "Bash(git commit -m ' *)"
+    ]
+  }
+}
