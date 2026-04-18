@@ -18,6 +18,7 @@ Things to verify after recent changes (0.8.7). Check off each item as you confir
 ## Warp / Movement
 
 - [ ] **Warp to object at 0km** — Warp to a stargate, planet, or station at 0km. Ship should decelerate and stop at or within a few hundred meters of the target — not 10+ km past it.
+// Landed within object, got flung out to 30KM. Re-evaluate, when warping at zero, should be landing within 2 to 2.5km away from the object.
 - [ ] **No 180-degree flip** — During warp deceleration, the ship should slow down facing forward. It should NOT rotate 180 degrees or visually snap/reverse as it drops out of warp.
 - [ ] **Immediate re-warp** — As soon as you drop out of warp, immediately warp somewhere else. Should work cleanly without freezing or desyncing.
 - [ ] **Orbit entry** — Lock a target and set orbit. The ship should smoothly enter orbit without a one-tick direction jerk at the start.
