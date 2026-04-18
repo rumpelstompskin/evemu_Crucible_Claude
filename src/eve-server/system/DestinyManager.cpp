@@ -1106,9 +1106,9 @@ void DestinyManager::Follow() {
     const GPoint& target_point = m_targetEntity.second->GetPosition();
     GVector heading(m_position, target_point);
     double rawDist = heading.length() - m_radius;
-    m_targetDistance = (rawDist > 0.0) ? (uint32)rawDist : 0;
+    m_targetDistance = (rawDist > 0.0) ? rawDist : 0.0;
 
-    if (m_targetDistance < m_followDistance) {
+    if (rawDist <= (double)m_followDistance) {
         if (mySE->HasPilot())
             if (mySE->GetPilot()->IsAutoPilot()) {
                 SetSpeedFraction(0.1);
