@@ -1746,7 +1746,13 @@ void DestinyManager::WarpDecel(uint16 sec_into_warp) {
                 mySE->GetName(), mySE->GetID(), decelTime, sec_into_warp, currentShipSpeed, m_targetDistance);
 
     WarpUpdate(currentShipSpeed);
-    if (currentShipSpeed <= m_speedToLeaveWarp)
+    // Fire WarpStop when remaining distance equals the GOTO stopping distance.
+    // UpdateVelocity() always caps exit speed to m_speedToLeaveWarp, so the
+    // stopping distance is fixed: m_speedToLeaveWarp * m_shipAgility.
+    // Triggering early leaves exactly that much runway so GOTO decel coasts
+    // the ship to a halt at m_targetPoint instead of overshooting by that amount.
+    double stoppingDist = static_cast<double>(m_speedToLeaveWarp) * m_shipAgility;
+    if (currentShipSpeed <= m_speedToLeaveWarp || (m_targetDistance > 0.0 && m_targetDistance <= stoppingDist))
         WarpStop(currentShipSpeed);
 }
 
